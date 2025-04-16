@@ -61,7 +61,7 @@ def initialize_weights(model):
             m.bias.data.zero_()
 
 
-def edge_promoting(image_path, save_path, n):
+def edge_promoting(image_path, save_path, n):     #对输入的图像进行边缘增强处理
     kernel_size = 5
     kernel = np.ones((kernel_size, kernel_size), np.uint8)
     gauss = cv2.getGaussianKernel(kernel_size, 0)
@@ -76,22 +76,25 @@ def edge_promoting(image_path, save_path, n):
     
     edges = cv2.Canny(gray_img, 100, 200)
     dilation = cv2.dilate(edges, kernel)
-    result = np.copy(rgb_img)
-    #gauss_img = np.copy(rgb_img)
+
+    #result = np.copy(rgb_img)
+    gauss_img = np.copy(rgb_img)
     idx = np.where(dilation != 0)
-    """
+
     for i in range(np.sum(dilation != 0)):
-        for j in range(3):  
-            result[idx[0][i], idx[1][i], j] = np.sum(
+        for j in range(3):
+            gauss_img[idx[0][i], idx[1][i], j] = np.sum(
                 np.multiply(pad_img[idx[0][i]:idx[0][i] + kernel_size, idx[1][i]:idx[1][i] + kernel_size, j], gauss))
-    """
+    """ 
+    # 对BGR三个通道分别处理
     for i in range(np.sum(dilation != 0)):
-        for c in range(3):  # 对BGR三个通道分别处理
+        for c in range(3): 
             result[idx[0][i], idx[1][i], c] = np.mean(
                 rgb_img[idx[0][i]:idx[0][i] + 5, idx[1][i]:idx[1][i] + 5, c]
             )
-
-    result = result
+    """
+    result = gauss_img
+    #result = result
     cv2.imwrite(os.path.join(save_path, f'{n}.png'), result)  
 
 

@@ -19,7 +19,7 @@ class residual_block(nn.Module):
 
 #生成器类 generator
 class generator(nn.Module):
-    def __init__(self, noise_dim=100, out_channel=3, filters=64, res_num=4):
+    def __init__(self, noise_dim=100, out_channel=1, filters=64, res_num=4):
         super(generator, self).__init__()
         
         #self.fc = nn.Linear(noise_dim, filters * 8 * 8)
@@ -109,7 +109,8 @@ class discriminator(nn.Module):
         super(discriminator, self).__init__()
 
         self.features = nn.Sequential(
-            nn.Conv2d(3, 64, 4, 2, 1),
+            nn.Conv2d(1, 64, 4, 2, 1),
+            #nn.Conv2d(3, 64, 4, 2, 1),
             nn.LeakyReLU(0.2, inplace=True),
 
             nn.Conv2d(64, 128, 4, 2, 1),

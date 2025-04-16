@@ -34,19 +34,21 @@ class MyDataset(Dataset):
             #transforms.Resize((32, 32)),
             transforms.Resize((2048, 2048)),
             transforms.ToTensor(),
-            #transforms.Normalize(mean=[0.5], std=[0.5]),
-        #])
+            transforms.Normalize(mean=[0.5], std=[0.5]),
+        ])
             #三通道
-            transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
-            ])
+            #transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+            #])
 
     def __len__(self):
         return len(self.path_list)
 
     def __getitem__(self, idx):
         img_path = self.path_list[idx]
-        #image = Image.open(img_path).convert('L')
-        image = Image.open(img_path)
+        # 灰色选项
+        image = Image.open(img_path).convert('L')
+        #彩色选项
+        #image = Image.open(img_path)
         
         if self.augmentations and self.mode == 'train':
             image = np.array(image)

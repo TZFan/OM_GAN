@@ -32,8 +32,8 @@ class Experiment:
 
         combined_dataset = ConcatDataset([train_real_dataset, real_fake_dataset])
         print(f"Number of samples in combined_dataset: {len(combined_dataset)}")
-        self.combined_loader = DataLoader(combined_dataset, batch_size=self.batch_size, shuffle=True, num_workers=15)
-
+        #self.combined_loader = DataLoader(combined_dataset, batch_size=self.batch_size, shuffle=True, num_workers=28)
+        self.combined_loader = DataLoader(combined_dataset, batch_size=self.batch_size, shuffle=True, num_workers=3)
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
         self.D = model.discriminator().to(self.device)
@@ -65,11 +65,11 @@ class Experiment:
 
             fake_imgs = self.G(noise)
             #灰度图拓展为3通道
-            #fake_imgs_rgb_norm = (fake_imgs.repeat(1, 3, 1, 1) + 1) / 2
-            #real_imgs_rgb_norm = (real_imgs.repeat(1, 3, 1, 1) + 1) / 2
+            fake_imgs_rgb_norm = (fake_imgs.repeat(1, 3, 1, 1) + 1) / 2
+            real_imgs_rgb_norm = (real_imgs.repeat(1, 3, 1, 1) + 1) / 2
 
-            fake_imgs_rgb_norm = (fake_imgs + 1) / 2  # 直接归一化
-            real_imgs_rgb_norm = (real_imgs + 1) / 2
+            #fake_imgs_rgb_norm = (fake_imgs + 1) / 2  # 直接归一化
+            #real_imgs_rgb_norm = (real_imgs + 1) / 2
 
             assert fake_imgs_rgb_norm.shape[1] == 3, f"期望3通道，实际得到{fake_imgs_rgb_norm.shape[1]}通道"
 
@@ -95,7 +95,7 @@ class Experiment:
         return average_content_loss
     
 
-    def train(self, e, n_critic=3, lambda_gp=10):
+    def train(self, e, n_critic=5, lambda_gp=10):
         self.D.train()
         self.G.train()
 
